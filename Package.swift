@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -12,9 +12,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/apple/swift-algorithms.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/apple/swift-algorithms", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.0.0")),
     ],
     targets: [
         .executableTarget(
