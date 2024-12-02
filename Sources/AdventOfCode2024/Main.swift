@@ -3,11 +3,12 @@ import ArgumentParser
 
 @main
 struct AdventOfCode: ParsableCommand {
-    public static let configuration = CommandConfiguration(
-        subcommands: [
-            Day0.self,
-        ]
-    )
+    public static let subcommands: [any DayCommand.Type] = [
+        Day1A.self,
+        Day1B.self,
+    ]
+    
+    public static let configuration = CommandConfiguration(subcommands: Self.subcommands)
 }
 
 protocol DayCommand: ParsableCommand {
@@ -33,19 +34,31 @@ extension DayCommand where Output == String {
 }
 
 extension DayCommand {
-    func run() throws {
-        guard let dataInput = try FileHandle.standardInput.readToEnd() else {
+    func run(stringInput: String) throws -> String {
+        let input = try self.parseInput(stringInput)
+        let output = try self.run(input)
+        let outputString = try self.serializeOutput(output) + "\n"
+        return outputString
+    }
+    
+    func run(in: FileHandle, out: FileHandle) throws {
+        guard let dataInput = try `in`.readToEnd() else {
             throw "Failed to retrieve input data. Make sure you're providing data in stdin"
         }
         guard let stringInput = String(data: dataInput, encoding: .utf8) else {
             throw "Failed to parse input. Make sure you're providing correct ut8 string data."
         }
-        let input = try self.parseInput(stringInput)
-        let output = try self.run(input)
-        let outputString = try self.serializeOutput(output) + "\n"
+        
+        let outputString = try self.run(stringInput: stringInput)
+        
         guard let outputData = outputString.data(using: .utf8) else {
             throw "Failed to serialize output data"
         }
-        try FileHandle.standardOutput.write(contentsOf: outputData)
+        try `out`.write(contentsOf: outputData)
+
+    }
+ 
+    func run() throws {
+        try self.run(in: FileHandle.standardInput, out: FileHandle.standardOutput)
     }
 }
