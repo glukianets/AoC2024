@@ -65,3 +65,43 @@ func memoized<I: Hashable, O>(_ f: @escaping (I) -> O) -> (I) -> O {
     let f = memoized(f as (I) throws -> O)
     return { try! f($0) }
 }
+
+
+public struct Peekable<Iterator: IteratorProtocol>: IteratorProtocol {
+    public typealias Element = Iterator.Element
+    
+    private var iterator: Iterator
+    private var nextElement: Element? = nil
+    
+    init(_ iterator: Iterator) {
+        self.iterator = iterator
+        self.nextElement = self.iterator.next()
+    }
+    
+    public func peek() -> Element? {
+        self.nextElement
+    }
+    
+    public mutating func next() -> Element? {
+        defer { self.nextElement = self.iterator.next() }
+        return self.nextElement
+    }
+}
+
+extension Peekable: Equatable where Iterator: Equatable {
+    public static func == (lhs: Peekable<Iterator>, rhs: Peekable<Iterator>) -> Bool {
+        lhs.iterator == rhs.iterator
+    }
+}
+
+extension Peekable: Comparable where Iterator: Comparable {
+    public static func < (lhs: Peekable<Iterator>, rhs: Peekable<Iterator>) -> Bool {
+        lhs.iterator == rhs.iterator
+    }
+}
+
+extension IteratorProtocol {
+    public var peekable: Peekable<Self> {
+        .init(self)
+    }
+}

@@ -14,6 +14,6 @@ struct Day0: DayCommand {
     }
 
     func run(_ input: Input) throws -> Output {
-        "test0"
+        input
     }
 }

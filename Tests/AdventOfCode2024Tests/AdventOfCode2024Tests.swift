@@ -8,24 +8,29 @@ final class AdventOfCode2021Tests {
         let command = commandType.init()
         let commandName = String(describing: commandType)
         
-        let input = try testData(fileName: commandName, extension: "input")
+        let rawInput = try testData(fileName: commandName, extension: "input")
             ?? testData(fileName: String(commandName.dropLast(1)), extension: "input")
+        
+        let input = rawInput?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard let input else { throw "Input not found for \(commandName)" }
    
-        let output = try command.run(stringInput: input)
+        let rawOutput = try command.run(stringInput: input)
+        let output = rawOutput.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        guard let expectedOutput = try testData(fileName: commandName, extension: "output") else {
+        guard let rawExpectedOutput = try testData(fileName: commandName, extension: "output") else {
             Issue.record("No expected result for \(commandName) to compare; actual result was \(output)")
             return
         }
+        
+        let expectedOutput = rawExpectedOutput.trimmingCharacters(in: .whitespacesAndNewlines)
 
         try #require(output == expectedOutput)
     }
     
     @Test
     func testParticular() async throws {
-        try await self.testDay(Day1A.self)
+        try await self.testDay(Day0.self)
     }
     
     private func testData(fileName: String, extension: String? = nil) throws -> String? {

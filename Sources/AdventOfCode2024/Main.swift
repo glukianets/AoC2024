@@ -6,6 +6,8 @@ struct AdventOfCode: ParsableCommand {
     public static let subcommands: [any DayCommand.Type] = [
         Day1A.self,
         Day1B.self,
+        Day2A.self,
+        Day2B.self,
     ]
     
     public static let configuration = CommandConfiguration(subcommands: Self.subcommands)
@@ -37,7 +39,7 @@ extension DayCommand {
     func run(stringInput: String) throws -> String {
         let input = try self.parseInput(stringInput)
         let output = try self.run(input)
-        let outputString = try self.serializeOutput(output) + "\n"
+        let outputString = try self.serializeOutput(output)
         return outputString
     }
     
