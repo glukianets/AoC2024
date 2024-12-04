@@ -36,10 +36,6 @@ class Day3B: DayCommand {
         case dont
     }
     
-    struct Mul {
-        let lhs: Int, rhs: Int
-    }
-    
     required init() { /**/ }
 
     func parseInput(_ input: String) throws -> Input {
