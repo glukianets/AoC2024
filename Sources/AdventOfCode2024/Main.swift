@@ -12,6 +12,8 @@ struct AdventOfCode: ParsableCommand {
         Day3B.self,
         Day4A.self,
         Day4B.self,
+        Day5A.self,
+        Day5B.self,
     ]
     
     public static let configuration = CommandConfiguration(subcommands: Self.subcommands)
@@ -38,6 +40,13 @@ extension DayCommand where Output == String {
         output
     }
 }
+
+extension DayCommand where Output == Int {
+    func serializeOutput(_ output: Output) throws -> String {
+        "\(output)"
+    }
+}
+
 
 extension DayCommand {
     func run(stringInput: String) throws -> String {

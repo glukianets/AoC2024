@@ -14,10 +14,6 @@ class Day1A: DayCommand {
         }
     }
 
-    func serializeOutput(_ output: Output) throws -> String {
-        "\(output)"
-    }
-
     func run(_ input: Input) throws -> Output {
         zip(input.map(\.0).sorted(), input.map(\.1).sorted()).map { abs($0 - $1) }.reduce(0, +)
     }

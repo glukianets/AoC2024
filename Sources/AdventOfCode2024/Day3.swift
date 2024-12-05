@@ -17,10 +17,6 @@ class Day3A: DayCommand {
         }
     }
 
-    func serializeOutput(_ output: Output) throws -> String {
-        "\(output)"
-    }
-
     func run(_ input: Input) throws -> Output {
         input.reduce(0) { $0 + $1.lhs * $1.rhs }
     }
@@ -53,10 +49,6 @@ class Day3B: DayCommand {
                 fatalError("?")
             }
         }
-    }
-
-    func serializeOutput(_ output: Output) throws -> String {
-        "\(output)"
     }
 
     func run(_ input: Input) throws -> Output {

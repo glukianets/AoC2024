@@ -15,10 +15,6 @@ class Day4A: DayCommand {
         return input.map { $0.padding(toLength: max, withPad: "\0", startingAt: 0).map { $0.asciiValue ?? 0 } }
     }
 
-    func serializeOutput(_ output: Output) throws -> String {
-        "\(output)"
-    }
-
     func run(_ input: Input) throws -> Output {
         func find(at position: (x: Int, y: Int), toward direction: (x: Int, y: Int), subject: some StringProtocol) -> Bool {
             guard let first = subject.first else { return true }

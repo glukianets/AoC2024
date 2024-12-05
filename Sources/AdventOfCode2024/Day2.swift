@@ -12,10 +12,6 @@ class Day2A: DayCommand {
         }
     }
 
-    func serializeOutput(_ output: Output) throws -> String {
-        "\(output)"
-    }
-
     func run(_ input: Input) throws -> Output {
         input.count { reading in
             let pairs = zip(reading, reading.dropFirst()).map { $0 - $1 }
