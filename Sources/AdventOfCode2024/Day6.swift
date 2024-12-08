@@ -21,6 +21,10 @@ class Day6A: DayCommand {
         static func +(_ lhs: Self, _ rhs: Self) -> Self {
             .init(lhs.x + rhs.x, lhs.y + rhs.y)
         }
+        
+        static func -(_ lhs: Self, _ rhs: Self) -> Self {
+            .init(lhs.x - rhs.x, lhs.y - rhs.y)
+        }
     }
     
     struct Direction: OptionSet, CaseIterable {
