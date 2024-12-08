@@ -32,7 +32,7 @@ final class AdventOfCode2021Tests {
     func testParticular() async throws {
         try await self.testDay(Day0.self)
     }
-    
+
     private func testData(fileName: String, extension: String? = nil) throws -> String? {
         try Bundle.module.url(forResource: fileName, withExtension: `extension`, subdirectory: "TestData").flatMap {
             try String(data: try Data(contentsOf: $0), encoding: .utf8).unwrapped
