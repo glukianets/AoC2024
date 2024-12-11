@@ -15,7 +15,7 @@ final class AdventOfCode2021Tests {
         
         guard let input else { throw "Input not found for \(commandName)" }
    
-        let rawOutput = try command.run(stringInput: input)
+        let rawOutput = try await command.run(stringInput: input)
         let output = rawOutput.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard let rawExpectedOutput = try testData(fileName: commandName, extension: "output") else {
