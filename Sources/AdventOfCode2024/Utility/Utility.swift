@@ -105,3 +105,9 @@ extension IteratorProtocol {
         .init(self)
     }
 }
+
+extension Collection where Element: Collection {
+    var indices2d: some Sequence<(y: Index, x: Element.Index)> {
+        self.indices.lazy.flatMap { y in self[y].indices.map { x in (y: y, x: x) } }
+    }
+}

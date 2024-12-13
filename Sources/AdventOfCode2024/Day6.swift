@@ -34,7 +34,7 @@ class Day6A: DayCommand {
         static let down = Self(rawValue: 1 << 2)
         static let up = Self(rawValue: 1 << 3)
        
-        static let allCases: [Day6A.Direction] = [.up, .right, .down, .left]
+        static let allCases: [Self] = [.up, .right, .down, .left]
         
         let rawValue: Int
         
@@ -43,6 +43,12 @@ class Day6A: DayCommand {
                 ((self.rawValue >> 1) & 1) - (self.rawValue & 1),
                 ((self.rawValue >> 2) & 1) - ((self.rawValue >> 3) & 1)
             )
+        }
+        
+        var cases: some Collection<Self> { Self.allCases.lazy.filter(self.contains(_:)) }
+        
+        var inverse: Self {
+            Self(rawValue: ~self.rawValue & 0b1111)
         }
         
         init(rawValue: Int) {
