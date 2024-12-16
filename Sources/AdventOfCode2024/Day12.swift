@@ -6,7 +6,7 @@ class Day12A: DayCommand {
     typealias Input = [[UInt16]]
     typealias Output = Int
     typealias Direction = Day6A.Direction
-    typealias Position = Day6A.Position
+    typealias Vec2D = Day6A.Vec2D
 
     required init() { /**/ }
    

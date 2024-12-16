@@ -3,10 +3,10 @@ import Algorithms
 import Collections
 
 class Day13A: DayCommand {
-    typealias Input = [(a: Position, b: Position, prize: Position)]
+    typealias Input = [(a: Vec2D, b: Vec2D, prize: Vec2D)]
     typealias Output = Int
     typealias Direction = Day6A.Direction
-    typealias Position = Day6A.Position
+    typealias Vec2D = Day6A.Vec2D
 
     required init() { /**/ }
    
@@ -25,18 +25,18 @@ class Day13A: DayCommand {
                 else { throw "Invalid Input" }
                 
                 return try (
-                    Position(Int(ax).unwrapped, Int(ay).unwrapped),
-                    Position(Int(bx).unwrapped, Int(by).unwrapped),
-                    Position(Int(px).unwrapped, Int(py).unwrapped)
+                    Vec2D(Int(ax).unwrapped, Int(ay).unwrapped),
+                    Vec2D(Int(bx).unwrapped, Int(by).unwrapped),
+                    Vec2D(Int(px).unwrapped, Int(py).unwrapped)
                 )
             }
     }
 
     func run(_ input: Input) async throws -> Output {
         input.compactMap { (a, b, c) in
-            let positions: some Sequence<Position> = (0...100).flatMap { x in (0...100).map { y in Position(x, y) } }
-            let combinations: some Sequence<Position> = positions
-                .filter { Position($0.x * a.x + $0.y * b.x, $0.x * a.y + $0.y * b.y) == c }
+            let positions: some Sequence<Vec2D> = (0...100).flatMap { x in (0...100).map { y in Vec2D(x, y) } }
+            let combinations: some Sequence<Vec2D> = positions
+                .filter { Vec2D($0.x * a.x + $0.y * b.x, $0.x * a.y + $0.y * b.y) == c }
             return combinations
                 .min(by: { $0.x < $1.x || $0.x == $1.x && $0.y < $1.y })
                 .map { $0.x * 3 + $0.y }
@@ -47,15 +47,15 @@ class Day13A: DayCommand {
 class Day13B: Day13A {
     override func parseInput(_ input: String) throws -> Input {
         let result = try super.parseInput(input)
-        let delta = Position(10000000000000, 10000000000000)
+        let delta = Vec2D(10000000000000, 10000000000000)
         
         return result.map {
-            ($0.a, $0.b, $0.prize + delta)
+            ($0.a, $0.b, $0.prize &+ delta)
         }
     }
     
     override func run(_ input: Day13A.Input) async throws -> Day13A.Output {
-        func linearCombination(a: Position, b: Position, c: Position) -> Position? {
+        func linearCombination(a: Vec2D, b: Vec2D, c: Vec2D) -> Vec2D? {
             let det = a.x * b.y - a.y * b.x
 
             guard det != 0 else { return nil }
@@ -70,7 +70,7 @@ class Day13B: Day13A {
 
             guard x >= 0 && y >= 0 else { return nil }
 
-            return Position(x, y)
+            return Vec2D(x, y)
         }
         
         return input

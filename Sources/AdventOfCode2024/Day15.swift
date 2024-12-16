@@ -2,12 +2,13 @@ import Foundation
 import Algorithms
 import Collections
 
-class Day15A: DayCommand {
+struct Day15A: DayCommand {
     typealias Input = (map: [Position: Obstacle], program: [Direction])
     typealias Output = Int
-
-    required init() { /**/ }
     
+    typealias Position = Day6A.Vec2D
+    typealias Direction = Day6A.Direction
+
     enum Obstacle {
         case wall, box, robot
     }
@@ -63,13 +64,12 @@ class Day15A: DayCommand {
     }
 }
 
-class Day15B: DayCommand {
-    typealias Input = (map: [Position: Obstacle], program: [Direction])
+struct Day15B: DayCommand {
+    typealias Input = (map: [Vec2D: Obstacle], program: [Direction])
     typealias Output = Int
-    typealias Position = SIMD2<Int>
+    typealias Vec2D = SIMD2<Int>
+    typealias Direction = Day6A.Direction
 
-    required init() { /**/ }
-    
     enum Obstacle: Equatable {
         case wall, box(isLeft: Bool), robot
     }
@@ -81,13 +81,13 @@ class Day15B: DayCommand {
         
         guard let map = halves.first, let program = halves.last, halves.count == 2 else { throw "Invalid Input" }
                 
-        let parsedMap: [Position: Obstacle] = .init(
+        let parsedMap: [Vec2D: Obstacle] = .init(
             uniqueKeysWithValues: map.enumerated().flatMap { y, line in
-                line.enumerated().flatMap { x, char -> [(Position, Obstacle)] in
+                line.enumerated().flatMap { x, char -> [(Vec2D, Obstacle)] in
                     switch char {
-                    case "#": [(Position(x * 2, y), .wall), (Position(x * 2 + 1, y), .wall)]
-                    case "O": [(Position(x * 2, y), .box(isLeft: true)), (Position(x * 2 + 1, y), .box(isLeft: false))]
-                    case "@": [(Position(x * 2, y), .robot)]
+                    case "#": [(Vec2D(x * 2, y), .wall), (Vec2D(x * 2 + 1, y), .wall)]
+                    case "O": [(Vec2D(x * 2, y), .box(isLeft: true)), (Vec2D(x * 2 + 1, y), .box(isLeft: false))]
+                    case "@": [(Vec2D(x * 2, y), .robot)]
                     default: []
                     }
                 }
@@ -101,9 +101,9 @@ class Day15B: DayCommand {
 
     func run(_ input: Input) async throws -> Output {
         func tryMove(
-            at position: Position,
+            at position: Vec2D,
             to direction: Direction,
-            in map: inout [Position: Obstacle],
+            in map: inout [Vec2D: Obstacle],
             dryRun: Bool
         ) -> Bool {
             switch map[position] {
@@ -133,9 +133,9 @@ class Day15B: DayCommand {
         }
         
         func _tryMove(
-            at position: Position,
+            at position: Vec2D,
             to direction: Direction,
-            in map: inout [Position: Obstacle],
+            in map: inout [Vec2D: Obstacle],
             dryRun: Bool
         ) -> Bool {
             let next = position &+ direction.vector
@@ -154,62 +154,5 @@ class Day15B: DayCommand {
                 acc.robot &+= command.vector
             }
         }.map.filter { if case .box(isLeft: true) = $0.value { true } else { false } }.map { 100 * $0.key.y + $0.key.x }.reduce(0, +)
-    }
-}
-
-typealias Position = SIMD2<Int>
-
-struct Direction: OptionSet, CaseIterable {
-    static let none: Self = []
-    static let left = Self(rawValue: 1 << 0)
-    static let right = Self(rawValue: 1 << 1)
-    static let down = Self(rawValue: 1 << 2)
-    static let up = Self(rawValue: 1 << 3)
-   
-    static let allCases: [Self] = [.up, .right, .down, .left]
-    
-    let rawValue: Int
-    
-    var description: String {
-        switch self {
-        case .left: "<"
-        case .right: ">"
-        case .down: "v"
-        case .up: "^"
-        case .none: "."
-        default: "*"
-        }
-    }
-    
-    var vector: Position {
-        Position(
-            ((self.rawValue >> 1) & 1) - (self.rawValue & 1),
-            ((self.rawValue >> 2) & 1) - ((self.rawValue >> 3) & 1)
-        )
-    }
-    
-    var cases: some Collection<Self> { Self.allCases.lazy.filter(self.contains(_:)) }
-    
-    var inverse: Self {
-        Self(rawValue: ~self.rawValue & 0b1111)
-    }
-    
-    init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    
-    init?(_ string: some StringProtocol) {
-        switch string {
-        case "<": self = .left
-        case ">": self = .right
-        case "v": self = .down
-        case "^": self = .up
-        default: return nil
-        }
-    }
-    
-    init(_ position: Position) {
-        let (dx, dy) = (position.x.signum(), position.y.signum())
-        self.rawValue = ((2 - ((dx >> 1) & 1)) * (dx * dx)) | (((((dy >> 1) & 1) + 1) << 2) * (dy * dy));
     }
 }

@@ -3,10 +3,10 @@ import Algorithms
 import Collections
 
 class Day14A: DayCommand {
-    typealias Input = [(position: Position, velocity: Position)]
+    typealias Input = [(position: Vec2D, velocity: Vec2D)]
     typealias Output = Int
     typealias Direction = Day6A.Direction
-    typealias Position = SIMD2<Int>
+    typealias Vec2D = SIMD2<Int>
 
     required init() { /**/ }
    
@@ -16,14 +16,14 @@ class Day14A: DayCommand {
         return try input.components(separatedBy: .newlines).map {
             guard let (_, px, py, vx, vy) = try regex.wholeMatch(in: $0)?.output else { throw "Invalid Input \($0)" }
             return try (
-                Position(Int(px).unwrapped, Int(py).unwrapped),
-                Position(Int(vx).unwrapped, Int(vy).unwrapped)
+                Vec2D(Int(px).unwrapped, Int(py).unwrapped),
+                Vec2D(Int(vx).unwrapped, Int(vy).unwrapped)
             )
         }
     }
 
     func run(_ input: Input) async throws -> Output {
-        let size = Position(101, 103)
+        let size = Vec2D(101, 103)
         let time = 100
         
         let endPosition = input.lazy.map {
@@ -40,7 +40,7 @@ class Day14A: DayCommand {
 
 class Day14B: Day14A {
     override func run(_ input: Day14A.Input) async throws -> Day14A.Output {
-        let size = Position(101, 103)
+        let size = Vec2D(101, 103)
         let timeCap = 10000
        
         let states = sequence(first: input) { $0.map { (($0.position &+ size &+ $0.velocity) % size, $0.velocity) } }
