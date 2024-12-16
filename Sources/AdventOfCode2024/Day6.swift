@@ -27,7 +27,7 @@ class Day6A: DayCommand {
         }
     }
     
-    struct Direction: OptionSet, CaseIterable {
+    struct Direction: OptionSet, CaseIterable, LosslessStringConvertible {
         static let none: Self = []
         static let left = Self(rawValue: 1 << 0)
         static let right = Self(rawValue: 1 << 1)
@@ -51,6 +51,17 @@ class Day6A: DayCommand {
             Self(rawValue: ~self.rawValue & 0b1111)
         }
         
+        var description: String {
+            switch self {
+            case .left: "<"
+            case .right: ">"
+            case .down: "v"
+            case .up: "^"
+            case .none: "."
+            default: "*"
+            }
+        }
+        
         init(rawValue: Int) {
             self.rawValue = rawValue
         }
@@ -58,6 +69,17 @@ class Day6A: DayCommand {
         init(_ position: Position) {
             let (dx, dy) = (position.x.signum(), position.y.signum())
               self.rawValue = ((2 - ((dx >> 1) & 1)) * (dx * dx)) | (((((dy >> 1) & 1) + 1) << 2) * (dy * dy));
+        }
+        
+        
+        init?(_ string: some StringProtocol) {
+            switch string {
+            case "<": self = .left
+            case ">": self = .right
+            case "v": self = .down
+            case "^": self = .up
+            default: return nil
+            }
         }
         
         var next: Self {
