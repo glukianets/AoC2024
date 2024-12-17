@@ -37,6 +37,16 @@ class Day6A: DayCommand {
             Self(rawValue: ~self.rawValue & 0b1111)
         }
         
+        var opposite: Self {
+            switch self {
+            case .left: .right
+            case .right: .left
+            case .up: .down
+            case .down: .up
+            default: .none
+            }
+        }
+        
         var description: String {
             switch self {
             case .left: "<"
@@ -68,8 +78,12 @@ class Day6A: DayCommand {
             }
         }
         
-        var next: Self {
+        var cw: Self {
             Self.allCases[(Self.allCases.firstIndex(of: self)! + 1) % Self.allCases.count]
+        }
+        
+        var ccw: Self {
+            Self.allCases[(Self.allCases.firstIndex(of: self)! - 1 + Self.allCases.count) % Self.allCases.count]
         }
     }
     
@@ -121,7 +135,7 @@ class Day6A: DayCommand {
             log.append((location, direction))
             let nextLocation = location &+ direction.vector
             if obstacles.contains(nextLocation) {
-                direction = direction.next
+                direction = direction.cw
             } else {
                 location = nextLocation
             }
